@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Astro Santos — Researcher</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #f4f6f9;
+      --card:      #ffffff;
+      --nav-bg:    #ffffff;
+      --border:    #e4e8ef;
+      --text:      #1a1d23;
+      --muted:     #6b7280;
+      --accent:    #4f46e5;
+      --accent-lt: #eef2ff;
+      --btn:       #3b4bdb;
+      --btn-hover: #2f3bc0;
+      --icon-bg:   #f1f3f8;
+      --icon-hover:#e2e6f3;
+      --shadow:    0 2px 12px rgba(0,0,0,0.07);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+      --radius:    14px;
+      --radius-sm: 8px;
+    }
+
+    [data-theme="dark"] {
+      --bg:        #0f1117;
+      --card:      #1a1d27;
+      --nav-bg:    #13151f;
+      --border:    #2a2d3a;
+      --text:      #e8eaf0;
+      --muted:     #8b92a8;
+      --accent:    #818cf8;
+      --accent-lt: #1e2040;
+      --btn:       #6366f1;
+      --btn-hover: #4f46e5;
+      --icon-bg:   #22253a;
+      --icon-hover:#2e3350;
+      --shadow:    0 2px 12px rgba(0,0,0,0.3);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ── Navbar ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow);
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .nav-brand {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 4px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 13.5px;
+      font-weight: 400;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+      background: var(--icon-bg);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border: none;
+      background: var(--icon-bg);
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .icon-btn:hover {
+      background: var(--icon-hover);
+      color: var(--text);
+    }
+
+    /* ── Main layout ── */
+    main {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .hero-card {
+      background: var(--card);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+      padding: 40px 44px;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 48px;
+      transition: background 0.3s, border-color 0.3s;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Left column ── */
+    .profile-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding-top: 8px;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      width: 148px;
+      height: 148px;
+      margin-bottom: 20px;
+    }
+
+    .avatar-wrap img {
+      width: 148px;
+      height: 148px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--border);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Placeholder avatar when no image provided */
+    .avatar-placeholder {
+      width: 148px;
+      height: 148px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-lt), var(--icon-bg));
+      border: 3px solid var(--border);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Serif Display', serif;
+      font-size: 48px;
+      color: var(--accent);
+    }
+
+    .avatar-badge {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      width: 32px;
+      height: 32px;
+      background: var(--card);
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .profile-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 4px;
+      letter-spacing: -0.5px;
+    }
+
+    .profile-pronouns {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .profile-title {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .profile-org {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    /* Social icons */
+    .social-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .social-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--icon-bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 15px;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+    }
+
+    .social-btn:hover {
+      background: var(--accent-lt);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* ── Right column ── */
+    .content-col {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    /* Section header */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .section-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--accent-lt);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+
+    /* Summary text */
+    .summary-text {
+      font-size: 13.5px;
+      line-height: 1.75;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    /* Download CV button */
+    .btn-cv {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--btn);
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 9px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(79,70,229,0.25);
+    }
+
+    .btn-cv:hover {
+      background: var(--btn-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(79,70,229,0.35);
+    }
+
+    /* ── Education cards ── */
+    .edu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .edu-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
+
+    .edu-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 16px rgba(79,70,229,0.1);
+      transform: translateY(-2px);
+    }
+
+    .edu-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--btn);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .edu-degree {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 3px;
+    }
+
+    .edu-school {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── Search overlay ── */
+    .search-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 100px;
+    }
+
+    .search-overlay.open { display: flex; }
+
+    .search-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      width: 560px;
+      max-width: 90vw;
+      padding: 16px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .search-box input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      font-family: 'DM Sans', sans-serif;
+      background: transparent;
+      color: var(--text);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 760px) {
+      .hero-card {
+        grid-template-columns: 1fr;
+        padding: 28px 24px;
+        gap: 32px;
+      }
+      .edu-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .edu-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navbar ── -->
+  <nav>
+    <a href="#" class="nav-brand">Astro Santos</a>
+
+    <ul class="nav-links">
+      <li><a href="#bio">Bio</a></li>
+      <li><a href="#papers">Papers</a></li>
+      <li><a href="#talks">Talks</a></li>
+      <li><a href="#news">News</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#teaching">Teaching</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="icon-btn" onclick="toggleSearch()" title="Search">
+        <!-- Search icon -->
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+      </button>
+      <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle dark mode">
+        <!-- Moon icon (shown in light mode) -->
+        <svg id="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <!-- Sun icon (shown in dark mode) -->
+        <svg id="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── Search overlay ── -->
+  <div class="search-overlay" id="search-overlay" onclick="closeSearch(event)">
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Search papers, projects, talks…" />
+    </div>
+  </div>
+
+  <!-- ── Main content ── -->
+  <main id="bio">
+    <div class="hero-card">
+
+      <!-- Left: Profile -->
+      <div class="profile-col">
+        <div class="avatar-wrap">
+          <!--
+            REPLACE THIS: add your own photo.
+            Option 1 — local file: <img src="assets/photo.jpg" alt="Astro Santos">
+            Option 2 — remote URL: <img src="https://..." alt="Astro Santos">
+            Option 3 — keep the placeholder below and delete the img tag above.
+          -->
+          <div class="avatar-placeholder">A</div>
+          <div class="avatar-badge">🚀</div>
+        </div>
+
+        <h1 class="profile-name">Astro Santos</h1>
+        <p class="profile-pronouns">(he/him)</p>
+        <p class="profile-title">Senior AI Research Scientist</p>
+        <p class="profile-org">Your Institution</p>
+
+        <div class="social-row">
+          <!-- Email -->
+          <a href="mailto:you@email.com" class="social-btn" title="Email">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          </a>
+          <!-- X / Twitter -->
+          <a href="https://x.com/yourhandle" class="social-btn" title="X / Twitter" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <!-- GitHub -->
+          <a href="https://github.com/and-sants" class="social-btn" title="GitHub" target="_blank" rel="noopener">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          </a>
+          <!-- LinkedIn -->
+          <a href="https://linkedin.com/in/yourprofile" class="social-btn" title="LinkedIn" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <!-- Google Scholar -->
+          <a href="https://scholar.google.com/citations?user=YOURID" class="social-btn" title="Google Scholar" target="_blank" rel="noopener">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 1 0 0 14 7 7 0 0 0 0-14z"/></svg>
+          </a>
+          <!-- ORCID -->
+          <a href="https://orcid.org/0000-0000-0000-0000" class="social-btn" title="ORCID" target="_blank" rel="noopener">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 0 1-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.016-5.325 5.016h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272 0 3.872-2.484 3.872-3.722 0-2.016-1.284-3.722-3.884-3.722h-2.285z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: Content -->
+      <div class="content-col">
+
+        <!-- Professional Summary -->
+        <section>
+          <div class="section-header">
+            <div class="section-icon">📋</div>
+            <h2 class="section-title">Professional Summary</h2>
+          </div>
+          <p class="summary-text">
+            <!--  ✏️  EDIT THIS: Replace with your own bio paragraph  -->
+            Astro Santos is a Senior AI Research Scientist at [Your Institution], where he leads
+            groundbreaking work on large language models and multimodal systems. His research has
+            been published in top conferences like NeurIPS and ICML, with over 10,000 citations.
+            He is passionate about pushing the boundaries of AI while ensuring ethical development.
+            Outside of work, he enjoys hiking, building custom PCs, and mentoring the next
+            generation of AI talent.
+          </p>
+          <a href="assets/cv.pdf" class="btn-cv" download>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Download CV
+          </a>
+        </section>
+
+        <!-- Education -->
+        <section id="education">
+          <div class="section-header">
+            <div class="section-icon">🎓</div>
+            <h2 class="section-title">Education</h2>
+          </div>
+          <div class="edu-grid">
+
+            <!-- Card 1 -->
+            <div class="edu-card">
+              <div class="edu-icon">🎓</div>
+              <div>
+                <div class="edu-degree">PhD Computer Science (AI Focus)</div>
+                <div class="edu-school">Stanford University</div>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="edu-card">
+              <div class="edu-icon">🎓</div>
+              <div>
+                <div class="edu-degree">MS Computer Science</div>
+                <div class="edu-school">Carnegie Mellon University</div>
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="edu-card">
+              <div class="edu-icon">🎓</div>
+              <div>
+                <div class="edu-degree">BS Computer Science</div>
+                <div class="edu-school">MIT</div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </div><!-- end content-col -->
+    </div><!-- end hero-card -->
+  </main>
+
+  <script>
+    // ── Dark mode toggle ──
+    const root = document.documentElement;
+    const moon = document.getElementById('icon-moon');
+    const sun  = document.getElementById('icon-sun');
+
+    // Respect system preference on first load
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      root.setAttribute('data-theme', 'dark');
+      moon.style.display = 'none';
+      sun.style.display  = '';
+    }
+
+    function toggleTheme() {
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      moon.style.display = isDark ? '' : 'none';
+      sun.style.display  = isDark ? 'none' : '';
+    }
+
+    // ── Search overlay ──
+    function toggleSearch() {
+      document.getElementById('search-overlay').classList.toggle('open');
+      setTimeout(() => document.getElementById('search-input').focus(), 50);
+    }
+
+    function closeSearch(e) {
+      if (e.target.id === 'search-overlay') {
+        document.getElementById('search-overlay').classList.remove('open');
+      }
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') document.getElementById('search-overlay').classList.remove('open');
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); toggleSearch(); }
+    });
+  </script>
+</body>
+</html>
